@@ -1,0 +1,47 @@
+*, ::before, ::after {
+  box-sizing: border-box;
+}
+
+#content {
+  display: flex;
+  gap: 20px;
+}
+
+.row {
+  display: flex;
+  height: 50px;
+}
+
+.gridsquare {
+  border: 1px solid black;
+  width: 50px;
+  background-color: rgb(68, 68, 255);
+}
+
+.player .gridsquare:hover {
+  background-color: lightgreen;
+}
+
+.placedship.gridsquare, .placedship.gridsquare:hover {
+  background-color: lightgrey;
+}
+
+.waterhit, .waterhit.gridsquare:hover {
+  background-color: rgb(157, 205, 255);
+}
+
+.hit, .hit.gridsquare:hover {
+  background-color: orange;
+}
+
+.sunk, .sunk.gridsquare:hover {
+  background-color: red;
+}
+
+.won {
+  border: 10px solid green;
+}
+
+.lost {
+  border: 10px solid red;
+}
