@@ -24,4 +24,9 @@ export default class Player extends Gameboard {
   get y() {
     return this.#posY;
   }
+
+  coordinateToAttack(x, y) {
+    this.#posX = x;
+    this.#posY = y;
+  }
 }

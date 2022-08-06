@@ -5,6 +5,12 @@
 #content {
   display: flex;
   gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+#addShip {
+  height: 3rem;
 }
 
 .row {
@@ -18,7 +24,7 @@
   background-color: rgb(68, 68, 255);
 }
 
-.player .gridsquare:hover {
+#player, .gridsquare:hover {
   background-color: lightgreen;
 }
 

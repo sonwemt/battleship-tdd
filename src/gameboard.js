@@ -5,6 +5,8 @@ export default class Gameboard {
 
   #boardHeight;
 
+  #shipLengths = [5, 4, 3, 3, 2];
+
   #ships = [];
 
   sunkShips = [];
@@ -26,6 +28,10 @@ export default class Gameboard {
 
   get height() {
     return this.#boardHeight;
+  }
+
+  get shipLengths() {
+    return this.#shipLengths;
   }
 
   getShipObject(x, y) {
@@ -78,7 +84,10 @@ export default class Gameboard {
   receiveHit(x, y) {
     const coordinateValue = this.occupiedPositions[x][y];
     if (coordinateValue.ship !== undefined) {
-      coordinateValue.ship.hit(x, y, coordinateValue.hullSection);
+      // hit on this position already registered
+      if (!coordinateValue.ship.hit(x, y, coordinateValue.hullSection)) {
+        return false;
+      }
       if (this.occupiedPositions[x][y].ship.isSunk()) {
         this.sunkShips.push(this.#ships.splice(this.occupiedPositions[x][y].ship, 1));
         return 'sunk';

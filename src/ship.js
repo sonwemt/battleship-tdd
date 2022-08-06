@@ -10,7 +10,11 @@ export default class Ship {
   }
 
   hit(x, y, index) {
-    this.#hull[index] = { x, y };
+    if (!this.#hull[index]) {
+      this.#hull[index] = { x, y };
+    } else {
+      return false;
+    }
     return this;
   }
 
