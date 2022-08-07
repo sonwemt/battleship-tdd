@@ -52,6 +52,43 @@ export default class BattleshipDomController {
     }
   }
 
+  placeShipOutline(orientation, playerObj, position) {
+    for (let i = 0; i < playerObj.shipLengths[this.#placedShips]; i += 1) {
+      if (orientation) {
+        const squareToChange = document.querySelector(`#computer .row .gridsquare[data-x="${position.x + i}"][data-y="${position.y}"]`);
+        squareToChange.setAttribute('class', 'gridsquare placedship');
+      } else {
+        const squareToChange = document.querySelector(`#computer .row .gridsquare[data-x="${position.x}"][data-y="${position.y + i}"]`);
+        squareToChange.setAttribute('class', 'gridsquare placedship');
+      }
+    }
+  }
+
+  toggleShipPreview(orientation, playerObj, target) {
+    const shipLength = playerObj.shipLengths[this.#placedShips];
+    let previewClass;
+    const position = { x: Number(target.getAttribute('data-x')), y: Number(target.getAttribute('data-y')) };
+    for (let i = 0; i < shipLength; i += 1) {
+      let squareToChange;
+      if (orientation) {
+        squareToChange = document.querySelector(`#computer .row .gridsquare[data-x="${position.x + i}"][data-y="${position.y}"]`);
+      } else {
+        squareToChange = document.querySelector(`#computer .row .gridsquare[data-x="${position.x}"][data-y="${position.y + i}"]`);
+      }
+      if (squareToChange === null) {
+        return;
+      }
+      if (playerObj.placementValid(position.x, position.y, orientation, shipLength)) {
+        previewClass = 'validPreview';
+      } else {
+        previewClass = 'invalidPreview';
+      }
+      if (!squareToChange.classList.contains('placedship')) {
+        squareToChange.classList.toggle(previewClass);
+      }
+    }
+  }
+
   onShipDestruct(ship, playerName) {
     for (let i = 0; i < ship.hull.length; i += 1) {
       const shipPosition = document.querySelector(`${playerName} .row .gridsquare[data-x="${ship.hull[i].x}"][data-y="${ship.hull[i].y}"]`);
@@ -89,7 +126,7 @@ export default class BattleshipDomController {
         this.onShipDestruct(attackedShipObj, '#computer');
         break;
       default:
-        console.log('receivehit returned error');
+        console.log('computerTurn defaulted');
     }
   }
 
@@ -109,7 +146,7 @@ export default class BattleshipDomController {
         this.onShipDestruct(computerObj.getShipObject(target.getAttribute('data-x'), target.getAttribute('data-y')), '#player');
         return true;
       default:
-        console.log('receivehit returned error');
+        console.log('playerTurn defaulted');
     }
     return 'error';
   }
@@ -139,6 +176,7 @@ export default class BattleshipDomController {
   }
 
   placeShips(playerObj, computerObj) {
+    const abortHandler = new AbortController();
     this.#gameStatus.textContent = 'Place your ships.';
     const computerSquares = document.querySelectorAll('#computer .row .gridsquare');
     let orientation = true;
@@ -153,7 +191,6 @@ export default class BattleshipDomController {
         orientation = true;
       }
     });
-    const abortHandler = new AbortController();
     computerSquares.forEach((square) => {
       square.addEventListener('click', (e) => {
         const clickedPosition = { x: Number(e.target.getAttribute('data-x')), y: Number(e.target.getAttribute('data-y')) };
@@ -163,15 +200,7 @@ export default class BattleshipDomController {
           orientation,
           playerObj.shipLengths[this.#placedShips],
         )) {
-          for (let i = 0; i < playerObj.shipLengths[this.#placedShips]; i += 1) {
-            if (orientation) {
-              const squareToChange = document.querySelector(`#computer .row .gridsquare[data-x="${clickedPosition.x + i}"][data-y="${clickedPosition.y}"]`);
-              squareToChange.setAttribute('class', 'gridsquare placedship');
-            } else {
-              const squareToChange = document.querySelector(`#computer .row .gridsquare[data-x="${clickedPosition.x}"][data-y="${clickedPosition.y + i}"]`);
-              squareToChange.setAttribute('class', 'gridsquare placedship');
-            }
-          }
+          this.placeShipOutline(orientation, playerObj, clickedPosition);
 
           computerObj.placeShip(computerObj.shipLengths[this.#placedShips]);
 
@@ -184,6 +213,8 @@ export default class BattleshipDomController {
           }
         }
       }, { signal: abortHandler.signal });
+      square.addEventListener('mouseover', (e) => this.toggleShipPreview(orientation, playerObj, e.target), { signal: abortHandler.signal });
+      square.addEventListener('mouseout', (e) => this.toggleShipPreview(orientation, playerObj, e.target), { signal: abortHandler.signal });
     });
   }
 }
