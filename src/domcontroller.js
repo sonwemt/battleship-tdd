@@ -90,7 +90,7 @@ export default class BattleshipDomController {
   }
 
   onShipDestruct(ship, playerName) {
-    for (let i = 0; i < ship.hull.length; i += 1) {
+    for (let i = 0; i < ship.length; i += 1) {
       const shipPosition = document.querySelector(`${playerName} .row .gridsquare[data-x="${ship.hull[i].x}"][data-y="${ship.hull[i].y}"]`);
       shipPosition.setAttribute('class', 'gridsquare sunk');
     }
@@ -113,13 +113,13 @@ export default class BattleshipDomController {
     const attackedShipObj = playerObj.getShipObject(lastAttackedPos.x, lastAttackedPos.y);
 
     switch (computerTurnResult) {
-      case true:
+      case 'hit':
         attackedSquare.setAttribute('class', 'gridsquare hit');
         break;
       case false:
         console.log('gameover');
         break;
-      case 'hit':
+      case 'waterhit':
         attackedSquare.setAttribute('class', 'gridsquare waterhit');
         break;
       case 'sunk':
@@ -134,12 +134,12 @@ export default class BattleshipDomController {
     playerObj.coordinateToAttack(Number(target.getAttribute('data-x')), Number(target.getAttribute('data-y')));
 
     switch (playerObj.attack(computerObj)) {
-      case true:
+      case 'hit':
         target.setAttribute('class', 'gridsquare hit');
         return true;
       case false:
         return false;
-      case 'hit':
+      case 'waterhit':
         target.setAttribute('class', 'gridsquare waterhit');
         return true;
       case 'sunk':

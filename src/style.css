@@ -24,7 +24,7 @@
   background-color: rgb(68, 68, 255);
 }
 
-#player, .gridsquare:hover {
+#player .gridsquare:hover {
   background-color: lightgreen;
 }
 

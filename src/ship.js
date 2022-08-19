@@ -9,6 +9,10 @@ export default class Ship {
     return this.#hull;
   }
 
+  get length() {
+    return this.#hull.length;
+  }
+
   hit(x, y, index) {
     if (!this.#hull[index]) {
       this.#hull[index] = { x, y };

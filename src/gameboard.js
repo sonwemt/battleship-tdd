@@ -9,7 +9,7 @@ export default class Gameboard {
 
   #ships = [];
 
-  sunkShips = [];
+  sunkShips = 0;
 
   occupiedPositions;
 
@@ -89,19 +89,19 @@ export default class Gameboard {
         return false;
       }
       if (this.occupiedPositions[x][y].ship.isSunk()) {
-        this.sunkShips.push(this.#ships.splice(this.occupiedPositions[x][y].ship, 1));
+        this.sunkShips += 1;
         return 'sunk';
       }
-      return true;
+      return 'hit';
     }
     if (coordinateValue) {
       return false;
     }
-    this.occupiedPositions[x][y] = 'hit';
-    return 'hit';
+    this.occupiedPositions[x][y] = 'waterhit';
+    return 'waterhit';
   }
 
   shipsInPlay() {
-    return this.#ships.length > 0;
+    return this.#ships.length > this.sunkShips;
   }
 }
