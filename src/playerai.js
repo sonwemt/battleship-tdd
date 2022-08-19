@@ -134,7 +134,7 @@ export default class PlayerAI extends Player {
       if (this.foundShip.west) {
         this.foundShip.direction = false;
         this.x = this.foundShip.position[0].x;
-        this.y = this.lastY.y;
+        this.y = this.lastY;
       }
     } else if (this.foundShip.direction === 'south' && this.foundShip.south) {
       this.foundShip.direction = 'north';
