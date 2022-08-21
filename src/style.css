@@ -3,14 +3,28 @@
 }
 
 #content {
-  display: flex;
+  display: grid;
+  grid-template-columns: 3fr 1fr 3fr;
   gap: 20px;
-  justify-content: center;
+  justify-items: center;
   align-items: center;
 }
 
-#addShip {
+#player {
+  grid-column: 1/2;
+}
+
+#gameOptions {
+  display: flex;
+  gap: 5rem;
+  flex-direction: column;
+  justify-content: space-between;
   height: 3rem;
+  grid-column: 2/3;
+}
+
+#computer {
+  grid-column: 3/4;
 }
 
 .row {

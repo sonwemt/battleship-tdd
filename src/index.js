@@ -3,17 +3,44 @@ import Player from './player';
 import PlayerAI from './playerai';
 import './style.css';
 
-const boardSize = 10;
-
-const startGameButton = document.getElementById('addShip');
-
 function game() {
+  const boardSize = 10;
+
+  const gameOptions = document.getElementById('gameOptions');
+
+  const startGameButton = document.createElement('button');
+  startGameButton.id = 'startGame';
+  startGameButton.textContent = 'Start Game';
+  gameOptions.appendChild(startGameButton);
+
+  const restartGameButton = document.createElement('button');
+  restartGameButton.id = 'restartGame';
+  restartGameButton.textContent = 'Restart game';
+
+  const idObj = {
+    page: 'content',
+    player: 'player',
+    computer: 'computer',
+    gameOptions: 'gameOptions',
+  };
   const playerObj = new Player(boardSize, boardSize);
   const computerObj = new PlayerAI(boardSize, boardSize);
-  const domController = new BattleshipDomController('content', 'player', 'computer', boardSize, boardSize, playerObj, computerObj);
+  const domController = new BattleshipDomController(
+    idObj,
+    boardSize,
+    boardSize,
+    playerObj,
+    computerObj,
+  );
+
   startGameButton.addEventListener('click', () => {
     domController.placeShips(playerObj, computerObj);
-  }, { once: true });
+    startGameButton.remove();
+    gameOptions.appendChild(restartGameButton);
+  });
+
+  restartGameButton.addEventListener('click', () => {
+  });
 }
 
 game();

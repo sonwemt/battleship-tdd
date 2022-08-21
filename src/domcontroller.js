@@ -13,12 +13,15 @@ export default class BattleshipDomController {
 
   #numberOfShips = 5;
 
-  #gameStatus = document.getElementById('gameStatus');
+  #gameOptions;
 
-  constructor(pageContainer, playerGrid, computerGrid, width, height) {
-    this.#pageContainer = document.getElementById(pageContainer);
-    this.#playerGrid = document.getElementById(playerGrid);
-    this.#computerGrid = document.getElementById(computerGrid);
+  #gameStatus;
+
+  constructor(idObj, width, height) {
+    this.#pageContainer = document.getElementById(idObj.page);
+    this.#playerGrid = document.getElementById(idObj.player);
+    this.#computerGrid = document.getElementById(idObj.computer);
+    this.#gameOptions = document.getElementById(idObj.gameOptions);
     this.#width = width;
     this.#height = height;
     this.createGrids();
@@ -177,13 +180,18 @@ export default class BattleshipDomController {
 
   placeShips(playerObj, computerObj) {
     const abortHandler = new AbortController();
+
+    this.#gameStatus = document.createElement('div');
+    this.#gameStatus.id = 'gameStatus';
+    this.#gameOptions.appendChild(this.#gameStatus);
+
     this.#gameStatus.textContent = 'Place your ships.';
     const computerSquares = document.querySelectorAll('#computer .row .gridsquare');
     let orientation = true;
     const orientButton = document.createElement('button');
     orientButton.id = 'orientButton';
     orientButton.textContent = 'Change orientation';
-    this.#pageContainer.appendChild(orientButton);
+    this.#gameOptions.appendChild(orientButton);
     orientButton.addEventListener('click', () => {
       if (orientation) {
         orientation = false;
