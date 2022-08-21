@@ -229,4 +229,17 @@ export default class BattleshipDomController {
       square.addEventListener('mouseout', (e) => this.toggleShipPreview(orientation, playerObj, e.target), { signal: this.#placeShipAbort.signal });
     });
   }
+
+  clearGrids() {
+    while (
+      this.#computerGrid.lastChild
+      || this.#playerGrid.lastChild
+    ) {
+      this.#computerGrid.removeChild(this.#computerGrid.lastChild);
+      this.#playerGrid.removeChild(this.#playerGrid.lastChild);
+    }
+    while (this.#gameOptions.lastChild) {
+      this.#gameOptions.removeChild(this.#gameOptions.lastChild);
+    }
+  }
 }

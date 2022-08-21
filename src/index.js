@@ -40,6 +40,8 @@ function game() {
   });
 
   restartGameButton.addEventListener('click', () => {
+    domController.clearGrids();
+    game();
   });
 }
 
