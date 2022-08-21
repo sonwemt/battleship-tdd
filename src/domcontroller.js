@@ -17,6 +17,10 @@ export default class BattleshipDomController {
 
   #gameStatus;
 
+  #placeShipAbort;
+
+  #gameAbort;
+
   constructor(idObj, width, height) {
     this.#pageContainer = document.getElementById(idObj.page);
     this.#playerGrid = document.getElementById(idObj.player);
@@ -155,7 +159,7 @@ export default class BattleshipDomController {
   }
 
   addGameEventListeners(playerObj, computerObj) {
-    const controller = new AbortController();
+    this.#gameAbort = new AbortController();
 
     const playerSquares = document.querySelectorAll('#player .row .gridsquare');
 
@@ -167,19 +171,19 @@ export default class BattleshipDomController {
         if (!playerObj.shipsInPlay()) {
           this.onGameOver('#computer', '#player');
           this.#gameStatus.textContent = 'The computer wins!';
-          controller.abort();
+          this.#gameAbort.abort();
         }
         if (!computerObj.shipsInPlay()) {
           this.onGameOver('#player', '#computer');
           this.#gameStatus.textContent = 'You win!';
-          controller.abort();
+          this.#gameAbort.abort();
         }
-      }, { signal: controller.signal });
+      }, { signal: this.#gameAbort.signal });
     });
   }
 
   placeShips(playerObj, computerObj) {
-    const abortHandler = new AbortController();
+    this.#placeShipAbort = new AbortController();
 
     this.#gameStatus = document.createElement('div');
     this.#gameStatus.id = 'gameStatus';
@@ -216,13 +220,13 @@ export default class BattleshipDomController {
           if (this.#placedShips === this.#numberOfShips) {
             this.#gameStatus.textContent = 'Game start - Destroy your opponent\'s ships to win!';
             orientButton.remove();
-            abortHandler.abort();
+            this.#placeShipAbort.abort();
             this.addGameEventListeners(playerObj, computerObj);
           }
         }
-      }, { signal: abortHandler.signal });
-      square.addEventListener('mouseover', (e) => this.toggleShipPreview(orientation, playerObj, e.target), { signal: abortHandler.signal });
-      square.addEventListener('mouseout', (e) => this.toggleShipPreview(orientation, playerObj, e.target), { signal: abortHandler.signal });
+      }, { signal: this.#placeShipAbort.signal });
+      square.addEventListener('mouseover', (e) => this.toggleShipPreview(orientation, playerObj, e.target), { signal: this.#placeShipAbort.signal });
+      square.addEventListener('mouseout', (e) => this.toggleShipPreview(orientation, playerObj, e.target), { signal: this.#placeShipAbort.signal });
     });
   }
 }
